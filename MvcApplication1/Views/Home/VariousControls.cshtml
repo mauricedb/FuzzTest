@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "VariousControls";
+}
+
+<h2>VariousControls</h2>
+
+@{
+    var items = new List<SelectListItem>();
+    var item = new SelectListItem();
+    item.Text = "One";
+    item.Value = "one";
+    items.Add(item);
+    item = new SelectListItem();
+    item.Text = "Two";
+    item.Value = "Two";
+    items.Add(item);
+    item = new SelectListItem();
+    item.Text = "Three";
+    item.Value = "Three";
+    items.Add(item);
+    item = new SelectListItem();
+    item.Text = "Four";
+    item.Value = "four";
+    items.Add(item);
+}
+
+@Html.DropDownList("dd", items)
+<br/>
+@Html.ListBox("ll1", items)
+<br/>
+@Html.DropDownList("ll2", items, new { size = 4 })
+<br/>
+@Html.TextBox("tb")
+<br/>
+@Html.TextArea("ta")
+<br/>
+@Html.RadioButton("rb", "1") One
+<br/>
+@Html.RadioButton("rb", "2") Two
+<br/>
+<input type="date"/>
+<br/>
+<br/>
+<br/>
+<fieldset>
+            <legend>Form Input Elementen</legend>
+            <label class='editor-label'>Text</label>
+            <input type="text" autofocus placeholder="text"/>
+            <br />
+            <label class='editor-label'>Telefoon</label>
+            <input type="tel" placeholder="telefoon"/>
+            <br />
+            <label class='editor-label'>Search</label>
+            <input type="search"/ placeholder="search">
+            <br />
+            <label class='editor-label'>Url</label>
+            <input type="url" placeholder="url"/>
+            <br />
+            <label class='editor-label'>Email</label>
+            <input type="email" placeholder="email"/>
+            <br />
+            <label class='editor-label'>Number</label>
+            <input type="number" placeholder="number"/>
+            <br />
+            <label class='editor-label'>Color</label>
+            <input type="color" placeholder="color"/>
+            <br />
+            <label class='editor-label'>Range</label>
+            <input type="range"/>
+            <br />
+            <label class='editor-label'>Date</label>
+            <input type="date" placeholder="date"/>
+            <br />
+            <label class='editor-label'>Date & Time</label>
+            <input type="datetime" placeholder="date & time"/>
+            <br />
+            <label class='editor-label'>Date & Time Local</label>
+            <input type="datetime-local" placeholder="local date & time"/>
+            <br />
+            <label class='editor-label'>Time</label>
+            <input type="time" placeholder="time"/>
+            <br />
+            <label class='editor-label'>Month</label>
+            <input type="month" placeholder="month"/>
+            <br />
+            <label class='editor-label'>Week</label>
+            <input type="week" placeholder="week" />
+            <br />
+            <label class='editor-label'>File</label>
+            <input type="file" placeholder="file"/>
+            <br />
+        </fieldset>
+
+                                   
