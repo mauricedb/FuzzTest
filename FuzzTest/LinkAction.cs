@@ -7,10 +7,12 @@ namespace FuzzTest
     public class LinkAction : FuzzyAction
     {
         private readonly Link _element;
+        private Browser _browser;
 
-        public LinkAction(Link element)
+        public LinkAction(Browser browser, Link element)
             : base(element)
         {
+            _browser = browser;
             _element = element;
         }
 
@@ -18,7 +20,7 @@ namespace FuzzTest
         {
             get
             {
-                return 1;
+                return 10;
             }
         }
 
@@ -28,7 +30,9 @@ namespace FuzzTest
             {
                 return false;
             }
-            if (!_element.Url.StartsWith("http://localhost:", StringComparison.InvariantCultureIgnoreCase))
+
+            var rootUrl = _browser.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
+            if (!_element.Url.StartsWith(rootUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }
@@ -51,7 +55,7 @@ namespace FuzzTest
         {
             foreach (var link in browser.Links)
             {
-                actions.Add(new LinkAction(link));
+                actions.Add(new LinkAction(browser, link));
             }
         }
     }
