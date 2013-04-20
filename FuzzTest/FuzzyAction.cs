@@ -40,10 +40,30 @@ namespace FuzzTest
                 return false;
             }
 
+            if (!IsVisible())
+            {
+                return false;
+            }
+
             return true;
         }
 
         public abstract void Execute();
+
+        private bool IsVisible()
+        {
+            var element = _element;
+            while (element != null)
+            {
+                if (_element.Style.Display == "none")
+                {
+                    return false;
+                }
+                element = element.Parent;
+            }
+
+            return true;
+        }
     }
 
     public interface IFuzzyActionFactory
