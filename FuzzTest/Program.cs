@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using WatiN.Core;
-using WatiN.Core.DialogHandlers;
-using WatiN.Core.Native;
 
 namespace FuzzTest
 {
@@ -15,25 +13,31 @@ namespace FuzzTest
         static private readonly Random rnd = new Random(Environment.TickCount);
 
         static private readonly List<string> _deadEnds = new List<string>();
+        private static int MaxNumberOfCalls = 50;
+        private static int MaxNumberOfRuns = 50;
+
 
         [STAThread]
-        private static void Main(string[] args)
+        private static void Main()
         {
             TextFieldExtended.Register();
 
 
-            for (int i = 0; i < 250; i++)
+            for (int i = 0; i < MaxNumberOfRuns; i++)
             {
                 var sw = Stopwatch.StartNew();
 
-                var browser = new IE("http://localhost:1662/Home/VariousControls");
+                var url = "http://localhost:1662";
+                //var url = "http://mongo.learninglineapp.com";
+                //var url = "http://angularjstest.azurewebsites.net/";
+                //var url = "http://dotnetevents.nl/";
+                //var url = "http://www.windowsworkflowfoundation.eu/";
+                //var url = "http://wiki.windowsworkflowfoundation.eu/";
+
+                var browser = new IE(url);
                 {
                     var stack = new StringBuilder();
                     ExecuteAction(browser, 0, stack);
-                    //browser.TextField(Find.ByName("q")).TypeText("WatiN");
-                    //browser.Button(Find.ByName("btnG")).Click();
-
-                    //Assert.IsTrue(browser.ContainsText("WatiN"));
                 }
                 try
                 {
@@ -51,7 +55,7 @@ namespace FuzzTest
             Console.ReadLine();
         }
 
-        private static void ExecuteAction(Browser browser, int nesting, StringBuilder stack)
+        private static void ExecuteAction(Browser browser, int callNumber, StringBuilder stack)
         {
             var actions = FindAllActions(browser);
             var posibleActions = actions.Where(fa => fa.CanExecute()).ToArray();
@@ -87,10 +91,13 @@ namespace FuzzTest
                             _deadEnds.Add(stack.ToString());
                             Console.ResetColor();
                         }
-                        else if (nesting < 25)
+                        else
                         {
-                            var newStack = new StringBuilder(stack.ToString());
-                            ExecuteAction(browser, nesting + 1, newStack);
+                            if (callNumber < MaxNumberOfCalls)
+                            {
+                                var newStack = new StringBuilder(stack.ToString());
+                                ExecuteAction(browser, callNumber + 1, newStack);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -132,44 +139,13 @@ namespace FuzzTest
                 factory.Register(browser, actions);
             }
 
-            var x = browser.ElementsOfType<TextFieldExtended>();
-            foreach (var textFieldExtended in x)
-            {
-                
-            }
-            
+            //var x = browser.ElementsOfType<TextFieldExtended>();
+            //foreach (var textFieldExtended in x)
+            //{
+
+            //}
+
             return actions;
-        }
-    }
-
-    //[ElementTag("input", InputType = "text", Index = 0)]
-    //[ElementTag("input", InputType = "password", Index = 1)]
-    //[ElementTag("input", InputType = "textarea", Index = 2)]
-    [ElementTag("input", InputType = "date", Index = 3)]
-    [ElementTag("input", InputType = "datetime", Index = 4)]
-    //[ElementTag("textarea", Index = 4)]
-    [ElementTag("input", InputType = "email", Index = 5)]
-    [ElementTag("input", InputType = "url", Index = 6)]
-    [ElementTag("input", InputType = "number", Index = 7)]
-    [ElementTag("input", InputType = "range", Index = 8)]
-    [ElementTag("input", InputType = "search", Index = 9)]
-    [ElementTag("input", InputType = "color", Index = 10)]
-    public class TextFieldExtended : TextField
-    {
-        public TextFieldExtended(DomContainer domContainer, INativeElement element)
-            : base(domContainer, element)
-        {
-        }
-
-        public TextFieldExtended(DomContainer domContainer, ElementFinder finder)
-            : base(domContainer, finder)
-        {
-        }
-
-        public static void Register()
-        {
-            var typeToRegister = typeof(TextFieldExtended);
-            ElementFactory.RegisterElementType(typeToRegister);
         }
     }
 }

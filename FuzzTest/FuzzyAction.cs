@@ -18,7 +18,7 @@ namespace FuzzTest
             get { return _element; }
         }
 
-        public string StackId
+        public virtual string StackId
         {
             get { return _element.ToString(); }
         }

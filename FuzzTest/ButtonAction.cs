@@ -6,9 +6,9 @@ namespace FuzzTest
 {
     public class ButtonAction : FuzzyAction
     {
-        private readonly Button _button;
+        private readonly Element _button;
 
-        public ButtonAction(Button button)
+        public ButtonAction(Element button)
             : base(button)
         {
             _button = button;
@@ -46,6 +46,12 @@ namespace FuzzTest
             foreach (var button in browser.Buttons)
             {
                 actions.Add(new ButtonAction(button));
+            }
+
+            var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
+            foreach (var btn in btns)
+            {
+                actions.Add(new ButtonAction(btn));
             }
         }
     }
