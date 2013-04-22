@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+
 using WatiN.Core;
 
 namespace FuzzTest
@@ -36,6 +38,7 @@ namespace FuzzTest
         {
             Console.WriteLine("Clicking '{0}'", _button);
             _button.Click();
+            Thread.Sleep(500);
         }
     }
 
@@ -52,6 +55,31 @@ namespace FuzzTest
             foreach (var btn in btns)
             {
                 actions.Add(new ButtonAction(btn));
+            }
+
+            var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
+            foreach (var btn in clickable)
+            {
+                actions.Add(new ButtonAction(btn));
+            }
+
+            var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
+            foreach (var btn in commands)
+            {
+                actions.Add(new ButtonAction(btn));
+            }
+
+            var x = browser.Elements.Filter(el => el.Id != null && el.Id.EndsWith("MainButton"));
+            if (x.Count != 0)
+            {
+                var y = 0;
+            }
+
+            var frames = browser.Frames;
+            if (frames.Count > 1)
+            {
+                var y = 0;
+                
             }
         }
     }
