@@ -27,7 +27,8 @@ namespace FuzzTest
             {
                 var sw = Stopwatch.StartNew();
 
-                var url = "http://localhost:1662";
+                var url = "http://localhost:9001";
+                //var url = "http://localhost:1662";
                 //var url = "http://mongo.learninglineapp.com";
                 //var url = "http://angularjstest.azurewebsites.net/";
                 //var url = "http://dotnetevents.nl/";
