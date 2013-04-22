@@ -27,12 +27,13 @@ namespace FuzzTest
             {
                 var sw = Stopwatch.StartNew();
 
-                var url = "http://localhost:1662";
+                //var url = "http://localhost:1662";
                 //var url = "http://mongo.learninglineapp.com";
                 //var url = "http://angularjstest.azurewebsites.net/";
                 //var url = "http://dotnetevents.nl/";
                 //var url = "http://www.windowsworkflowfoundation.eu/";
                 //var url = "http://wiki.windowsworkflowfoundation.eu/";
+                var url = "http://ravendbtest.azurewebsites.net/";
 
                 var browser = new IE(url);
                 {
