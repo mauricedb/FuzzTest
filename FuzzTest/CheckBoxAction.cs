@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OpenQA.Selenium;
 using WatiN.Core;
 
 namespace FuzzTest
@@ -18,15 +19,15 @@ namespace FuzzTest
         }
     }
 
-    public class CheckBoxActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            foreach (var checkBox in browser.CheckBoxes)
-            {
-                actions.Add(new CheckBoxAction(checkBox));
-            }
+    //public class CheckBoxActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(IWebDriver browser, List<FuzzyAction> actions)
+    //    {
+    //        foreach (var checkBox in browser.CheckBoxes)
+    //        {
+    //            actions.Add(new CheckBoxAction(checkBox));
+    //        }
 
-        }
-    }
+    //    }
+    //}
 }

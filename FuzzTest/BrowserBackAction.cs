@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenQA.Selenium;
 using WatiN.Core;
 
 namespace FuzzTest
@@ -8,7 +9,7 @@ namespace FuzzTest
     {
         private Browser _browser;
 
-        public BrowserBackAction(Browser browser):base(null)
+        public BrowserBackAction(Browser browser):base((Link)null)
         {
             _browser = browser;
         }
@@ -32,12 +33,12 @@ namespace FuzzTest
         }
     }
 
-    public class BrowserActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            actions.Add(new BrowserBackAction(browser));
-        }
-    }
+    //public class BrowserActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(Browser browser, List<FuzzyAction> actions)
+    //    {
+    //        actions.Add(new BrowserBackAction(browser));
+    //    }
+    //}
 
 }

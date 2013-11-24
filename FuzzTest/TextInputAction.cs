@@ -84,20 +84,20 @@ namespace FuzzTest
         }
     }
 
-    public class TextInputActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            foreach (var textField in browser.TextFields)
-            {
-                var type = textField.GetAttributeValue("type");
-                if (type != "hidden")
-                {
-                    actions.Add(new TextInputAction(textField));
-                }
-            }
-        }
-    }   
+    //public class TextInputActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(Browser browser, List<FuzzyAction> actions)
+    //    {
+    //        foreach (var textField in browser.TextFields)
+    //        {
+    //            var type = textField.GetAttributeValue("type");
+    //            if (type != "hidden")
+    //            {
+    //                actions.Add(new TextInputAction(textField));
+    //            }
+    //        }
+    //    }
+    //}   
 
 
 }

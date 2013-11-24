@@ -42,45 +42,45 @@ namespace FuzzTest
         }
     }
 
-    public class ButtonActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            foreach (var button in browser.Buttons)
-            {
-                actions.Add(new ButtonAction(button));
-            }
+    //public class ButtonActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(Browser browser, List<FuzzyAction> actions)
+    //    {
+    //        foreach (var button in browser.Buttons)
+    //        {
+    //            actions.Add(new ButtonAction(button));
+    //        }
 
-            var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
-            foreach (var btn in btns)
-            {
-                actions.Add(new ButtonAction(btn));
-            }
+    //        var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
+    //        foreach (var btn in btns)
+    //        {
+    //            actions.Add(new ButtonAction(btn));
+    //        }
 
-            var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
-            foreach (var btn in clickable)
-            {
-                actions.Add(new ButtonAction(btn));
-            }
+    //        var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
+    //        foreach (var btn in clickable)
+    //        {
+    //            actions.Add(new ButtonAction(btn));
+    //        }
 
-            var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
-            foreach (var btn in commands)
-            {
-                actions.Add(new ButtonAction(btn));
-            }
+    //        var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
+    //        foreach (var btn in commands)
+    //        {
+    //            actions.Add(new ButtonAction(btn));
+    //        }
 
-            var x = browser.Elements.Filter(el => el.Id != null && el.Id.EndsWith("MainButton"));
-            if (x.Count != 0)
-            {
-                var y = 0;
-            }
+    //        var x = browser.Elements.Filter(el => el.Id != null && el.Id.EndsWith("MainButton"));
+    //        if (x.Count != 0)
+    //        {
+    //            var y = 0;
+    //        }
 
-            var frames = browser.Frames;
-            if (frames.Count > 1)
-            {
-                var y = 0;
+    //        var frames = browser.Frames;
+    //        if (frames.Count > 1)
+    //        {
+    //            var y = 0;
                 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 }

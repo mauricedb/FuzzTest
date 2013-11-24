@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 using WatiN.Core;
 
 namespace FuzzTest
@@ -37,8 +39,9 @@ namespace FuzzTest
                 //var url = "http://wiki.windowsworkflowfoundation.eu/";
                 //var url = "http://ravendbtest.azurewebsites.net/";
 
-                var browser = new IE(url);
+                var browser = new FirefoxDriver();
                 {
+                    browser.Navigate().GoToUrl(url);
                     var stack = new StringBuilder();
                     ExecuteAction(browser, 0, stack);
                 }
@@ -58,7 +61,7 @@ namespace FuzzTest
             Console.ReadLine();
         }
 
-        private static void ExecuteAction(Browser browser, int callNumber, StringBuilder stack)
+        private static void ExecuteAction(IWebDriver browser, int callNumber, StringBuilder stack)
         {
             var actions = FindAllActions(browser);
             var posibleActions = actions.Where(fa => fa.CanExecute()).ToArray();
@@ -84,9 +87,9 @@ namespace FuzzTest
                     {
                         action.Execute();
 
-                        if (
-                            browser.ContainsText(
-                                "<span><H1>Server Error in '/' Application.<hr width=100% size=1 color=silver></H1>"))
+                        if ( false)
+                            //browser.ContainsText(
+                            //    "<span><H1>Server Error in '/' Application.<hr width=100% size=1 color=silver></H1>"))
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("**** Server error *****");
@@ -111,7 +114,7 @@ namespace FuzzTest
                         _deadEnds.Add(stack.ToString());
                         Console.ResetColor();
 
-                        Process.GetProcessById(browser.ProcessID).Kill();
+                        //Process.GetProcessById(browser.ProcessID).Kill();
                     }
                 }
             }
@@ -125,7 +128,7 @@ namespace FuzzTest
             }
         }
 
-        private static IEnumerable<FuzzyAction> FindAllActions(Browser browser)
+        private static IEnumerable<FuzzyAction> FindAllActions(IWebDriver browser)
         {
             var actions = new List<FuzzyAction>();
 

@@ -47,15 +47,15 @@ namespace FuzzTest
         }
     }
 
-    public class SelectListActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            foreach (var selectList in browser.SelectLists)
-            {
-                actions.Add(new SelectListAction(selectList));
-            }
+    //public class SelectListActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(Browser browser, List<FuzzyAction> actions)
+    //    {
+    //        foreach (var selectList in browser.SelectLists)
+    //        {
+    //            actions.Add(new SelectListAction(selectList));
+    //        }
 
-        }
-    }
+    //    }
+    //}
 }

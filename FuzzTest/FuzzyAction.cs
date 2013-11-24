@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using OpenQA.Selenium;
 using WatiN.Core;
 
 namespace FuzzTest
@@ -13,6 +14,10 @@ namespace FuzzTest
             _element = element;
         }
 
+        protected FuzzyAction(IWebElement element)
+        {
+        }
+
         public Element Element
         {
             get { return _element; }
@@ -20,7 +25,11 @@ namespace FuzzTest
 
         public virtual string StackId
         {
-            get { return _element.ToString(); }
+            get
+            {
+                return "";
+                // ToDo: return _element.ToString();
+            }
         }
 
         public virtual int Weight
@@ -30,6 +39,9 @@ namespace FuzzTest
 
         public virtual bool CanExecute()
         {
+            return true;
+
+            // ToDo:
             if (!_element.Enabled)
             {
                 return false;
@@ -68,7 +80,7 @@ namespace FuzzTest
 
     public interface IFuzzyActionFactory
     {
-        void Register(Browser browser, List<FuzzyAction> actions);
+        void Register(IWebDriver browser, List<FuzzyAction> actions);
     }
 
 }

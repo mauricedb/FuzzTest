@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using WatiN.Core;
+using System.Linq;
+using OpenQA.Selenium;
 
 namespace FuzzTest
 {
     public class LinkAction : FuzzyAction
     {
-        private readonly Link _element;
-        private Browser _browser;
+        private readonly IWebElement _element;
+        private readonly IWebDriver _browser;
 
-        public LinkAction(Browser browser, Link element)
+        public LinkAction(IWebDriver browser, IWebElement element)
             : base(element)
         {
             _browser = browser;
@@ -26,14 +27,18 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            if (_element.Url.StartsWith("mailto:", StringComparison.InvariantCultureIgnoreCase))
+            var url = _element.GetAttribute("href");
+            if (url.StartsWith("mailto:", StringComparison.InvariantCultureIgnoreCase))
             {
+                // Do not click on mail links
                 return false;
             }
 
-            var rootUrl = _browser.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
-            if (!_element.Url.StartsWith(rootUrl, StringComparison.InvariantCultureIgnoreCase))
+            var uri = new Uri(_browser.Url);
+            var rootUrl = uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
+            if (!url.StartsWith(rootUrl, StringComparison.InvariantCultureIgnoreCase))
             {
+                // Do not follow links that navigate to other domains
                 return false;
             }
 
@@ -42,7 +47,10 @@ namespace FuzzTest
 
         public override void Execute()
         {
-            Console.WriteLine("Clicking '{0}'", _element);
+            var text = _element.Text;
+            var id = _element.GetAttribute("id");
+
+            Console.WriteLine("Clicking '{0}'", text ?? id);
             _element.Click();
         }
 
@@ -51,12 +59,11 @@ namespace FuzzTest
 
     public class LinkActionFactory : IFuzzyActionFactory
     {
-        public void Register(Browser browser, List<FuzzyAction> actions)
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
         {
-            foreach (var link in browser.Links)
-            {
-                actions.Add(new LinkAction(browser, link));
-            }
+            var links = browser.FindElements(By.TagName("a"));
+            actions.AddRange(
+                links.Select(link => new LinkAction(browser, link)));
         }
     }
 }

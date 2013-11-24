@@ -18,14 +18,14 @@ namespace FuzzTest
         }
     }
 
-    public class RadioButtonActionFactory : IFuzzyActionFactory
-    {
-        public void Register(Browser browser, List<FuzzyAction> actions)
-        {
-            foreach (var radioButton in browser.RadioButtons)
-            {
-                actions.Add(new RadioButtonAction(radioButton));
-            }
-        }
-    }
+    //public class RadioButtonActionFactory : IFuzzyActionFactory
+    //{
+    //    public void Register(Browser browser, List<FuzzyAction> actions)
+    //    {
+    //        foreach (var radioButton in browser.RadioButtons)
+    //        {
+    //            actions.Add(new RadioButtonAction(radioButton));
+    //        }
+    //    }
+    //}
 }
