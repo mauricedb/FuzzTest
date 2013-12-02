@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FuzzTest
 {
     public class ButtonAction : FuzzyAction
     {
-        private readonly Element _button;
+        private readonly IWebElement _button;
 
-        public ButtonAction(Element button)
+        public ButtonAction(IWebElement button)
             : base(button)
         {
             _button = button;
         }
+
 
         public override int Weight
         {
@@ -26,7 +26,9 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            if (_button.ClassName == "diagnoseButton" && _button.Id == "diagnose")
+            var id = _button.GetAttribute("id");
+            var className = _button.GetAttribute("class");
+            if (className == "diagnoseButton" && id == "diagnose")
             {
                 return false;
             }
@@ -36,51 +38,45 @@ namespace FuzzTest
 
         public override void Execute()
         {
-            Console.WriteLine("Clicking '{0}'", _button);
+            var text = _button.Text;
+            var id = _button.GetAttribute("id");
+
+            Console.WriteLine("Clicking '{0}'", text ?? id);
             _button.Click();
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
         }
     }
 
-    //public class ButtonActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(Browser browser, List<FuzzyAction> actions)
-    //    {
-    //        foreach (var button in browser.Buttons)
-    //        {
-    //            actions.Add(new ButtonAction(button));
-    //        }
+    public class ButtonActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
 
-    //        var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
-    //        foreach (var btn in btns)
-    //        {
-    //            actions.Add(new ButtonAction(btn));
-    //        }
+            foreach (var button in browser.FindElements(By.TagName("button")))
+            {
+                actions.Add(new ButtonAction(button));
+            }
 
-    //        var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
-    //        foreach (var btn in clickable)
-    //        {
-    //            actions.Add(new ButtonAction(btn));
-    //        }
 
-    //        var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
-    //        foreach (var btn in commands)
-    //        {
-    //            actions.Add(new ButtonAction(btn));
-    //        }
+            //var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
+            var btns = browser.FindElements(By.ClassName("btn"));
+            foreach (var btn in btns)
+            {
+                actions.Add(new ButtonAction(btn));
+            }
 
-    //        var x = browser.Elements.Filter(el => el.Id != null && el.Id.EndsWith("MainButton"));
-    //        if (x.Count != 0)
-    //        {
-    //            var y = 0;
-    //        }
+            //var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
+            //foreach (var btn in clickable)
+            //{
+            //    actions.Add(new ButtonAction(btn));
+            //}
 
-    //        var frames = browser.Frames;
-    //        if (frames.Count > 1)
-    //        {
-    //            var y = 0;
-                
-    //        }
-    //    }
-    //}
+            //var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
+            //foreach (var btn in commands)
+            //{
+            //    actions.Add(new ButtonAction(btn));
+            //}
+
+        }
+    }
 }

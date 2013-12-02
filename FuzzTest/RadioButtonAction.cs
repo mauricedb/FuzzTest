@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FuzzTest
 {
     public class RadioButtonAction : FuzzyAction
     {
-        private readonly RadioButton _radioButton;
+        private readonly IWebElement _radioButton;
 
-        public RadioButtonAction(RadioButton radioButton):base(radioButton)
+        public RadioButtonAction(IWebElement radioButton):base(radioButton)
         {
             _radioButton = radioButton;
         }
@@ -18,14 +18,17 @@ namespace FuzzTest
         }
     }
 
-    //public class RadioButtonActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(Browser browser, List<FuzzyAction> actions)
-    //    {
-    //        foreach (var radioButton in browser.RadioButtons)
-    //        {
-    //            actions.Add(new RadioButtonAction(radioButton));
-    //        }
-    //    }
-    //}
+    public class RadioButtonActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
+            foreach (var radioButton in browser.FindElements(By.TagName("input")))
+            {
+                if (radioButton.GetAttribute("type") == "radio")
+                {
+                    actions.Add(new RadioButtonAction(radioButton));
+                }
+            }
+        }
+    }
 }

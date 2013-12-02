@@ -7,9 +7,10 @@ namespace FuzzTest
 {
     public class BrowserBackAction : FuzzyAction
     {
-        private Browser _browser;
+        private IWebDriver _browser;
 
-        public BrowserBackAction(Browser browser):base((Link)null)
+        public BrowserBackAction(IWebDriver browser)
+            : base((IWebElement)null)
         {
             _browser = browser;
         }
@@ -29,16 +30,16 @@ namespace FuzzTest
         public override void Execute()
         {
             Console.WriteLine("Clicking the browser Back button.");
-            _browser.Back();
+            _browser.Navigate().Back();
         }
     }
 
-    //public class BrowserActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(Browser browser, List<FuzzyAction> actions)
-    //    {
-    //        actions.Add(new BrowserBackAction(browser));
-    //    }
-    //}
+    public class BrowserActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
+            actions.Add(new BrowserBackAction(browser));
+        }
+    }
 
 }

@@ -7,6 +7,7 @@ namespace FuzzTest
 {
     public abstract class FuzzyAction
     {
+        private readonly IWebElement _webElement;
         private readonly Element _element;
 
         protected FuzzyAction(Element element)
@@ -14,8 +15,9 @@ namespace FuzzTest
             _element = element;
         }
 
-        protected FuzzyAction(IWebElement element)
+        protected FuzzyAction(IWebElement webElement)
         {
+            _webElement = webElement;
         }
 
         public Element Element
@@ -27,8 +29,7 @@ namespace FuzzTest
         {
             get
             {
-                return "";
-                // ToDo: return _element.ToString();
+                return _webElement.Text;
             }
         }
 
@@ -39,20 +40,18 @@ namespace FuzzTest
 
         public virtual bool CanExecute()
         {
-            return true;
 
-            // ToDo:
-            if (!_element.Enabled)
+            if (!_webElement.Enabled)
             {
                 return false;
             }
 
-            if (_element.GetAttributeValue("data-fuzz-enabled") == "false")
+            if (!_webElement.Displayed)
             {
                 return false;
             }
 
-            if (!IsVisible())
+            if (_webElement.GetAttribute("data-fuzz-enabled") == "false")
             {
                 return false;
             }
@@ -62,20 +61,6 @@ namespace FuzzTest
 
         public abstract void Execute();
 
-        private bool IsVisible()
-        {
-            var element = _element;
-            while (element != null)
-            {
-                if (_element.Style.Display == "none")
-                {
-                    return false;
-                }
-                element = element.Parent;
-            }
-
-            return true;
-        }
     }
 
     public interface IFuzzyActionFactory

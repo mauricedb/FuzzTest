@@ -29,7 +29,8 @@ namespace FuzzTest
             {
                 var sw = Stopwatch.StartNew();
 
-                var url = "http://localhost:1662";
+                //var url = "http://localhost:1662";
+                var url = "http://localhost:1662/Home/VariousControls";
                 //var url = "http://localhost:9001";
                 //var url = "http://localhost:1662";
                 //var url = "http://mongo.learninglineapp.com";
@@ -68,14 +69,7 @@ namespace FuzzTest
 
             if (posibleActions.Any())
             {
-                var allActions = new List<FuzzyAction>();
-                foreach (var posibleAction in posibleActions)
-                {
-                    for (int i = 0; i < posibleAction.Weight; i++)
-                    {
-                        allActions.Add(posibleAction);
-                    }
-                }
+                var allActions = FuzzyActionsByWeight(posibleActions);
 
                 var index = rnd.Next(allActions.Count);
                 var action = allActions[index];
@@ -87,9 +81,9 @@ namespace FuzzTest
                     {
                         action.Execute();
 
-                        if ( false)
-                            //browser.ContainsText(
-                            //    "<span><H1>Server Error in '/' Application.<hr width=100% size=1 color=silver></H1>"))
+                        if (false)
+                        //browser.ContainsText(
+                        //    "<span><H1>Server Error in '/' Application.<hr width=100% size=1 color=silver></H1>"))
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("**** Server error *****");
@@ -114,7 +108,11 @@ namespace FuzzTest
                         _deadEnds.Add(stack.ToString());
                         Console.ResetColor();
 
-                        //Process.GetProcessById(browser.ProcessID).Kill();
+                        var processes = Process.GetProcessesByName(browser.Title);
+                        foreach (var process in processes)
+                        {
+                            process.Kill();
+                        }
                     }
                 }
             }
@@ -126,6 +124,19 @@ namespace FuzzTest
                 _deadEnds.Add(stack.ToString());
                 Console.ResetColor();
             }
+        }
+
+        private static List<FuzzyAction> FuzzyActionsByWeight(FuzzyAction[] posibleActions)
+        {
+            var allActions = new List<FuzzyAction>();
+            foreach (var posibleAction in posibleActions)
+            {
+                for (int i = 0; i < posibleAction.Weight; i++)
+                {
+                    allActions.Add(posibleAction);
+                }
+            }
+            return allActions;
         }
 
         private static IEnumerable<FuzzyAction> FindAllActions(IWebDriver browser)

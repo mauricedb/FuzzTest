@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using OpenQA.Selenium;
-using WatiN.Core;
 
 namespace FuzzTest
 {
     public class CheckBoxAction : FuzzyAction
     {
-        private readonly CheckBox _checkBox;
+        private readonly IWebElement _checkBox;
 
-        public CheckBoxAction(CheckBox checkBox):base(checkBox)
+        public CheckBoxAction(IWebElement checkBox)
+            : base(checkBox)
         {
             _checkBox = checkBox;
         }
@@ -19,15 +19,17 @@ namespace FuzzTest
         }
     }
 
-    //public class CheckBoxActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(IWebDriver browser, List<FuzzyAction> actions)
-    //    {
-    //        foreach (var checkBox in browser.CheckBoxes)
-    //        {
-    //            actions.Add(new CheckBoxAction(checkBox));
-    //        }
-
-    //    }
-    //}
+    public class CheckBoxActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
+            foreach (var checkBox in browser.FindElements(By.TagName("input")))
+            {
+                if (checkBox.GetAttribute("type") == "checkbox")
+                {
+                    actions.Add(new CheckBoxAction(checkBox));
+                }
+            }
+        }
+    }
 }

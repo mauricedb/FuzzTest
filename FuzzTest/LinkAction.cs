@@ -28,6 +28,11 @@ namespace FuzzTest
         public override bool CanExecute()
         {
             var url = _element.GetAttribute("href");
+            if (url == null)
+            {
+                return false;
+            }
+
             if (url.StartsWith("mailto:", StringComparison.InvariantCultureIgnoreCase))
             {
                 // Do not click on mail links

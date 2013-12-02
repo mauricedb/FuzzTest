@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using WatiN.Core;
 
 namespace FuzzTest
@@ -7,12 +9,12 @@ namespace FuzzTest
     public class SelectListAction : FuzzyAction
     {
         private static Random _rnd = new Random(Environment.TickCount);
-        private readonly SelectList _selectList;
+        private readonly SelectElement _selectList;
 
-        public SelectListAction(SelectList selectList)
+        public SelectListAction(IWebElement selectList)
             : base(selectList)
         {
-            _selectList = selectList;
+            _selectList = new SelectElement(selectList);
         }
 
         public override int Weight
@@ -32,7 +34,7 @@ namespace FuzzTest
             //else
             {
                 var item = _rnd.Next(_selectList.Options.Count);
-                Option option = _selectList.Options[item];
+                var option = _selectList.Options[item];
                 if (option.Selected)
                 {
                     Console.WriteLine("Clearing option {0} for '{1}'", option, _selectList);
@@ -41,21 +43,21 @@ namespace FuzzTest
                 else
                 {
                     Console.WriteLine("Selecting option {0} for '{1}'", option, _selectList);
-                    option.Select();
+                    option.Click();
                 }
             }
         }
     }
 
-    //public class SelectListActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(Browser browser, List<FuzzyAction> actions)
-    //    {
-    //        foreach (var selectList in browser.SelectLists)
-    //        {
-    //            actions.Add(new SelectListAction(selectList));
-    //        }
+    public class SelectListActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
+            foreach (var selectList in browser.FindElements(By.TagName("select")))
+            {
+                actions.Add(new SelectListAction(selectList));
+            }
 
-    //    }
-    //}
+        }
+    }
 }

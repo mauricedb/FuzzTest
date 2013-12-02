@@ -1,40 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FuzzTest
 {
     public class TextInputAction : FuzzyAction
     {
-        private static Random _rnd = new Random(Environment.TickCount);
-        private readonly TextField _textField;
+        private static readonly Random _rnd = new Random(Environment.TickCount);
+        private readonly IWebElement _textField;
+        private readonly string _text;
 
-        public TextInputAction(TextField textField)
+        public TextInputAction(IWebElement textField)
             : base(textField)
         {
             _textField = textField;
+            _text = _textField.Text;
         }
 
         public override int Weight
         {
-            get { return string.IsNullOrWhiteSpace(_textField.Value) ? 10 : 3; }
+            get
+            {
+                return string.IsNullOrWhiteSpace(_text) ? 10 : 3;
+            }
         }
 
         public override void Execute()
         {
             var text = GetRandomText();
-            Console.WriteLine("Typing '{0}' into {1}", text, _textField.Name);
-            _textField.TypeText(text);
+            Console.WriteLine("Typing '{0}' into {1}", text, _textField.GetAttribute("name") ?? _textField.GetAttribute("id"));
+            _textField.Clear();
+            _textField.SendKeys(text);
         }
 
         public override bool CanExecute()
         {
-            if (_textField.ReadOnly)
+            if (!string.IsNullOrEmpty(_textField.GetAttribute("readonly")))
             {
                 return false;
             }
 
-            var textType = _textField.GetAttributeValue("type");
+            var textType = _textField.GetAttribute("type");
             if (textType == "hidden")
             {
                 return false;
@@ -47,7 +53,7 @@ namespace FuzzTest
         {
             var texts = new List<string>();
 
-            var textType = _textField.GetAttributeValue("type");
+            var textType = _textField.GetAttribute("type");
             if (textType == "password")
             {
                 texts.Add("bla");
@@ -64,12 +70,18 @@ namespace FuzzTest
                 {
                     texts.Add("".PadRight(10, 'a'));
                 }
-                if (_textField.MaxLength < int.MaxValue)
+                var maxLengthStr = _textField.GetAttribute("maxlength");
+                var maxLength = 0;
+                if (int.TryParse(maxLengthStr, out maxLength))
                 {
-                    Console.WriteLine(_textField.MaxLength);
-                    texts.Add("".PadRight(_textField.MaxLength, 'm'));
+                    if (maxLength < int.MaxValue)
+                    {
+                        Console.WriteLine(maxLength);
+                        texts.Add("".PadRight(maxLength, 'm'));
+                    }
+                    texts.Add(int.MaxValue.ToString());
                 }
-                texts.Add(int.MaxValue.ToString());
+
                 texts.Add("1");
                 texts.Add("0");
                 texts.Add("-1");
@@ -84,20 +96,20 @@ namespace FuzzTest
         }
     }
 
-    //public class TextInputActionFactory : IFuzzyActionFactory
-    //{
-    //    public void Register(Browser browser, List<FuzzyAction> actions)
-    //    {
-    //        foreach (var textField in browser.TextFields)
-    //        {
-    //            var type = textField.GetAttributeValue("type");
-    //            if (type != "hidden")
-    //            {
-    //                actions.Add(new TextInputAction(textField));
-    //            }
-    //        }
-    //    }
-    //}   
+    public class TextInputActionFactory : IFuzzyActionFactory
+    {
+        public void Register(IWebDriver browser, List<FuzzyAction> actions)
+        {
+            foreach (var textField in browser.FindElements(By.TagName("input")))
+            {
+                var type = textField.GetAttribute("type");
+                if (type == "text" || type == "password")
+                {
+                    actions.Add(new TextInputAction(textField));
+                }
+            }
+        }
+    }
 
 
 }
