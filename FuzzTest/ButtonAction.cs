@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using OpenQA.Selenium;
 
 namespace FuzzTest
@@ -8,11 +7,15 @@ namespace FuzzTest
     public class ButtonAction : FuzzyAction
     {
         private readonly IWebElement _button;
+        private readonly string _className;
+        private readonly string _id;
 
         public ButtonAction(IWebElement button)
             : base(button)
         {
             _button = button;
+            _id = _button.GetAttribute("id");
+            _className = _button.GetAttribute("class");
         }
 
 
@@ -26,9 +29,7 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            var id = _button.GetAttribute("id");
-            var className = _button.GetAttribute("class");
-            if (className == "diagnoseButton" && id == "diagnose")
+            if (_className == "diagnoseButton" && _id == "diagnose")
             {
                 return false;
             }
@@ -39,9 +40,8 @@ namespace FuzzTest
         public override void Execute()
         {
             var text = _button.Text;
-            var id = _button.GetAttribute("id");
 
-            Console.WriteLine("Clicking '{0}'", text ?? id);
+            Console.WriteLine("Clicking '{0}'", text ?? _id);
             _button.Click();
             //Thread.Sleep(500);
         }

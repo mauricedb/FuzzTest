@@ -7,10 +7,15 @@ namespace FuzzTest
     public abstract class FuzzyAction
     {
         private readonly IWebElement _webElement;
+        private string _dataFuzzEnabed;
 
         protected FuzzyAction(IWebElement webElement)
         {
             _webElement = webElement;
+            if (_webElement != null)
+            {
+                _dataFuzzEnabled = _webElement.GetAttribute("data-fuzz-enabled");
+            }
         }
 
         public virtual string StackId
@@ -39,7 +44,7 @@ namespace FuzzTest
                 return false;
             }
 
-            if (_webElement.GetAttribute("data-fuzz-enabled") == "false")
+            if (_dataFuzzEnabed == "false")
             {
                 return false;
             }
@@ -49,6 +54,8 @@ namespace FuzzTest
 
         public abstract void Execute();
 
+
+        public string _dataFuzzEnabled { get; set; }
     }
 
     public interface IFuzzyActionFactory

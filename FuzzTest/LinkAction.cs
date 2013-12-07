@@ -9,12 +9,14 @@ namespace FuzzTest
     {
         private readonly IWebElement _element;
         private readonly IWebDriver _browser;
+        private string _href;
 
         public LinkAction(IWebDriver browser, IWebElement element)
             : base(element)
         {
             _browser = browser;
             _element = element;
+            _href = _element.GetAttribute("href");
         }
 
         public override int Weight
@@ -27,7 +29,7 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            var url = _element.GetAttribute("href");
+            var url = _href;
             if (url == null)
             {
                 return false;

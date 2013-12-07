@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using OpenQA.Selenium;
 
 namespace FuzzTest
 {
     public class TextInputAction : FuzzyAction
     {
-        private static readonly Random _rnd = new Random(Environment.TickCount);
+        private static readonly Random Rnd = new Random(Environment.TickCount);
         private readonly IWebElement _textField;
         private readonly string _text;
+        private readonly string _readOnly;
+        private readonly string _type;
+        private readonly string _maxLength;
 
         public TextInputAction(IWebElement textField)
             : base(textField)
         {
             _textField = textField;
+            _readOnly = _textField.GetAttribute("readonly");
+            _type = _textField.GetAttribute("type");
+            _maxLength = _textField.GetAttribute("maxlength");
             _text = _textField.Text;
         }
 
@@ -35,13 +42,12 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            if (!string.IsNullOrEmpty(_textField.GetAttribute("readonly")))
+            if (!string.IsNullOrEmpty(_readOnly))
             {
                 return false;
             }
 
-            var textType = _textField.GetAttribute("type");
-            if (textType == "hidden")
+            if (_type == "hidden")
             {
                 return false;
             }
@@ -53,7 +59,7 @@ namespace FuzzTest
         {
             var texts = new List<string>();
 
-            var textType = _textField.GetAttribute("type");
+            var textType = _type;
             if (textType == "password")
             {
                 texts.Add("bla");
@@ -70,29 +76,28 @@ namespace FuzzTest
                 {
                     texts.Add("".PadRight(10, 'a'));
                 }
-                var maxLengthStr = _textField.GetAttribute("maxlength");
-                var maxLength = 0;
-                if (int.TryParse(maxLengthStr, out maxLength))
+                int maxLength;
+                if (int.TryParse(_maxLength, out maxLength))
                 {
                     if (maxLength < int.MaxValue)
                     {
                         Console.WriteLine(maxLength);
                         texts.Add("".PadRight(maxLength, 'm'));
                     }
-                    texts.Add(int.MaxValue.ToString());
+                    texts.Add(int.MaxValue.ToString(CultureInfo.InvariantCulture));
                 }
 
                 texts.Add("1");
                 texts.Add("0");
                 texts.Add("-1");
-                texts.Add(int.MinValue.ToString());
+                texts.Add(int.MinValue.ToString(CultureInfo.InvariantCulture));
 
                 //texts.Add("".PadRight(100, 'a'));
                 //texts.Add("".PadRight(1000, 'a'));
                 texts.Add("<script>alert('Some injected script')</script>");
             }
 
-            return texts[_rnd.Next(texts.Count)];
+            return texts[Rnd.Next(texts.Count)];
         }
     }
 

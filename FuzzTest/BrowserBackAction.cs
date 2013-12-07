@@ -9,7 +9,7 @@ namespace FuzzTest
         private IWebDriver _browser;
 
         public BrowserBackAction(IWebDriver browser)
-            : base((IWebElement)null)
+            : base(null)
         {
             _browser = browser;
         }
