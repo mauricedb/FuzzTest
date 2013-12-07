@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using WatiN.Core;
 
 namespace FuzzTest
 {

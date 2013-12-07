@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using WatiN.Core;
 
 namespace FuzzTest
 {
@@ -22,8 +21,6 @@ namespace FuzzTest
         [STAThread]
         private static void Main()
         {
-            TextFieldExtended.Register();
-
 
             for (int i = 0; i < MaxNumberOfRuns; i++)
             {
