@@ -37,7 +37,7 @@ namespace FuzzTest
                 if (option.Selected)
                 {
                     Console.WriteLine("Clearing option {0} for '{1}'", option, _selectList);
-                    option.Clear();
+                    option.Click();
                 }
                 else
                 {
