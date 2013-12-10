@@ -10,6 +10,7 @@ namespace FuzzTest
         private readonly IWebElement _element;
         private readonly IWebDriver _browser;
         private string _href;
+        private string _onclick;
 
         public LinkAction(IWebDriver browser, IWebElement element)
             : base(element)
@@ -17,6 +18,7 @@ namespace FuzzTest
             _browser = browser;
             _element = element;
             _href = _element.GetAttribute("href");
+            _onclick = _element.GetAttribute("onclick");
         }
 
         public override int Weight
@@ -29,6 +31,12 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
+
+            if (!string.IsNullOrEmpty(_onclick))
+            {
+                return base.CanExecute(); 
+            }
+
             var url = _href;
             if (url == null)
             {
@@ -55,9 +63,8 @@ namespace FuzzTest
         public override void Execute()
         {
             var text = _element.Text;
-            var id = _element.GetAttribute("id");
 
-            Console.WriteLine("Clicking '{0}'", text ?? id);
+            Console.WriteLine("Clicking '{0}'", text ?? Id);
             _element.Click();
         }
 

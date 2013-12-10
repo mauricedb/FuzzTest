@@ -8,13 +8,11 @@ namespace FuzzTest
     {
         private readonly IWebElement _button;
         private readonly string _className;
-        private readonly string _id;
 
         public ButtonAction(IWebElement button)
             : base(button)
         {
             _button = button;
-            _id = _button.GetAttribute("id");
             _className = _button.GetAttribute("class");
         }
 
@@ -29,7 +27,7 @@ namespace FuzzTest
 
         public override bool CanExecute()
         {
-            if (_className == "diagnoseButton" && _id == "diagnose")
+            if (_className == "diagnoseButton" && Id == "diagnose")
             {
                 return false;
             }
@@ -41,7 +39,7 @@ namespace FuzzTest
         {
             var text = _button.Text;
 
-            Console.WriteLine("Clicking '{0}'", text ?? _id);
+            Console.WriteLine("Clicking '{0}'", text ?? Id);
             _button.Click();
             //Thread.Sleep(500);
         }

@@ -15,8 +15,11 @@ namespace FuzzTest
             if (_webElement != null)
             {
                 _dataFuzzEnabled = _webElement.GetAttribute("data-fuzz-enabled");
+                Id = _webElement.GetAttribute("id");
             }
         }
+
+        public string Id { get; private set; }
 
         public virtual string StackId
         {
