@@ -55,25 +55,23 @@ namespace FuzzTest
                 actions.Add(new ButtonAction(button));
             }
 
-
-            //var btns = browser.Elements.Filter(el => el.ClassName != null && el.ClassName.Contains("btn"));
             var btns = browser.FindElements(By.ClassName("btn"));
             foreach (var btn in btns)
             {
                 actions.Add(new ButtonAction(btn));
             }
 
-            //var clickable = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("onclick")));
-            //foreach (var btn in clickable)
-            //{
-            //    actions.Add(new ButtonAction(btn));
-            //}
+            var clickable = browser.FindElements(By.CssSelector("[onclick]"));
+            foreach (var btn in clickable)
+            {
+                actions.Add(new ButtonAction(btn));
+            }
 
-            //var commands = browser.Elements.Filter(el => !string.IsNullOrEmpty(el.GetAttributeValue("command")));
-            //foreach (var btn in commands)
-            //{
-            //    actions.Add(new ButtonAction(btn));
-            //}
+            var commands = browser.FindElements(By.CssSelector("[command]"));
+            foreach (var btn in commands)
+            {
+                actions.Add(new ButtonAction(btn));
+            }
 
         }
     }
