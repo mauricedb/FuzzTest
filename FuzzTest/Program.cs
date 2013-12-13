@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 
 namespace FuzzTest
 {
@@ -16,7 +17,7 @@ namespace FuzzTest
         static private readonly List<string> _deadEnds = new List<string>();
         private static int MaxNumberOfCalls = 50;
         private static int MaxNumberOfRuns = 50;
-
+        private static TimeSpan throttle = TimeSpan.FromMilliseconds(500);
 
         [STAThread]
         private static void Main()
@@ -27,8 +28,8 @@ namespace FuzzTest
                 var sw = Stopwatch.StartNew();
 
                 //var url = "http://localhost:1662";
-                var url = "http://localhost:1662/Home/VariousControls";
-                //var url = "http://localhost:9001";
+                //var url = "http://localhost:1662/Home/VariousControls";
+                var url = "http://localhost:9001";
                 //var url = "http://localhost:1662";
                 //var url = "http://mongo.learninglineapp.com";
                 //var url = "http://angularjstest.azurewebsites.net/";
@@ -37,6 +38,7 @@ namespace FuzzTest
                 //var url = "http://wiki.windowsworkflowfoundation.eu/";
                 //var url = "http://ravendbtest.azurewebsites.net/";
 
+                //var browser = new InternetExplorerDriver();
                 var browser = new FirefoxDriver();
                 {
                     browser.Navigate().GoToUrl(url);
@@ -50,6 +52,7 @@ namespace FuzzTest
                 catch (Exception)
                 {
                 }
+
                 sw.Stop();
                 Console.WriteLine("Test ran for {0}", sw.Elapsed);
                 Console.WriteLine();
@@ -77,6 +80,7 @@ namespace FuzzTest
                     try
                     {
                         action.Execute();
+                        Thread.Sleep(throttle);
 
                         if (false)
                         //browser.ContainsText(

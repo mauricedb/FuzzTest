@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+
 using OpenQA.Selenium;
 
 namespace FuzzTest
@@ -41,7 +43,6 @@ namespace FuzzTest
 
             Console.WriteLine("Clicking '{0}'", text ?? Id);
             _button.Click();
-            //Thread.Sleep(500);
         }
     }
 
