@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 
@@ -29,17 +30,21 @@ namespace FuzzTest
 
                 //var url = "http://localhost:1662";
                 //var url = "http://localhost:1662/Home/VariousControls";
-                var url = "http://localhost:9001";
+                //var url = "http://localhost:9001";
                 //var url = "http://localhost:1662";
                 //var url = "http://mongo.learninglineapp.com";
                 //var url = "http://angularjstest.azurewebsites.net/";
-                //var url = "http://dotnetevents.nl/";
+                var url = "http://dotnetevents.nl/";
                 //var url = "http://www.windowsworkflowfoundation.eu/";
                 //var url = "http://wiki.windowsworkflowfoundation.eu/";
                 //var url = "http://ravendbtest.azurewebsites.net/";
 
-                //var browser = new InternetExplorerDriver();
-                var browser = new FirefoxDriver();
+                //var browser = new InternetExplorerDriver(new InternetExplorerOptions()
+                //{
+                //    IgnoreZoomLevel = true
+                //});
+                //var browser = new FirefoxDriver();
+                var browser = new ChromeDriver();
                 {
                     browser.Navigate().GoToUrl(url);
                     var stack = new StringBuilder();
